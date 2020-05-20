@@ -40,3 +40,15 @@ Was created 33 unit tests, 4 tests cases for integration tests using real exampl
 You can use this example inserted into GitHub to test the Game:
 
 `sample-input.txt`
+
+### Change the configurations of the Game
+
+You can change the parameters inside of the `application.properties` to extend the Game to be able to work with different styles of the game, like five-pin bowling (But this feature was not cover by the tests). 
+
+`limit.frames=10`
+
+`rolls.last.frame=3`
+
+`rolls.normal.frame=2`
+
+`max.pins=10`

@@ -1,6 +1,7 @@
 package com.bowling.game;
 
 import com.bowling.game.exception.BowlingException;
+import com.bowling.game.strategy.GameStrategy;
 
 import java.util.List;
 
@@ -24,6 +25,8 @@ public interface Player extends ProcessScore {
      * @param name new name
      */
     void setName(String name);
+
+    GameStrategy getGameStrategy();
 
     /**
      * Get all the frames which this player has

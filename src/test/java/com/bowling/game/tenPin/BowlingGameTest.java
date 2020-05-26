@@ -1,5 +1,9 @@
-package com.bowling.game;
+package com.bowling.game.tenPin;
 
+import com.bowling.game.BowlingGame;
+import com.bowling.game.BowlingPlayer;
+import com.bowling.game.Game;
+import com.bowling.game.Player;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,22 +13,22 @@ import org.junit.Test;
  *
  * @author Pedro Ferri
  */
-public class BowlingGameTest {
+public class BowlingGameTest extends AbstractUtilTest {
 
     private Game game;
 
     @Before
     public void before() {
-        game = new BowlingGame();
+        game = new BowlingGame(this.gameStrategy);
 
     }
 
     @Test
     public void whenAddManyPlayersAndGetFromGame_thenExpectSamePlayer() {
-        Player player = new BowlingPlayer();
+        Player player = new BowlingPlayer(this.gameStrategy);
         player.setName("John");
 
-        Player player2 = new BowlingPlayer();
+        Player player2 = new BowlingPlayer(this.gameStrategy);
         player2.setName("John2");
 
         game.getPlayers().add(player);
@@ -37,10 +41,10 @@ public class BowlingGameTest {
 
     @Test
     public void whenAddManyPlayersAndGetNewFromGame_thenExpectNewPlayer() {
-        Player player = new BowlingPlayer();
+        Player player = new BowlingPlayer(this.gameStrategy);
         player.setName("John");
 
-        Player player2 = new BowlingPlayer();
+        Player player2 = new BowlingPlayer(this.gameStrategy);
         player2.setName("John2");
 
         game.getPlayers().add(player);

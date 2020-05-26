@@ -6,6 +6,7 @@ import com.bowling.game.Game;
 import com.bowling.game.exception.BowlingException;
 import com.bowling.game.parser.BowlingGameTextParser;
 import com.bowling.game.parser.GameParser;
+import com.bowling.game.strategy.GameStrategy;
 
 import java.io.IOException;
 
@@ -16,10 +17,16 @@ import java.io.IOException;
  */
 public class BowlingService implements GameService {
 
+    private final GameStrategy gameStrategy;
+
+    public BowlingService (GameStrategy gameStrategy){
+        this.gameStrategy = gameStrategy;
+    }
+
     @Override
     public Game processFileIntoGame(String fileName) throws BowlingException, IOException {
         FileManager file = new TextFileManager();
-        GameParser gameParser = new BowlingGameTextParser();
+        GameParser gameParser = new BowlingGameTextParser(this.gameStrategy);
 
         return gameParser.parse(file.loadFileContent(fileName));
     }

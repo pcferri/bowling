@@ -1,17 +1,23 @@
 package com.bowling.game;
 
-import com.bowling.game.enuns.BowlingEnum;
+
+import com.bowling.game.strategy.GameStrategy;
 
 /**
  * BowlingRoll implementation for Roll
  *
  * @author Pedro Ferri
  */
-public class BowlingRoll implements Roll {
+public final class BowlingRoll implements Roll {
+
+    private final GameStrategy gameStrategy;
+
+    public BowlingRoll (GameStrategy gameStrategy){
+        this.gameStrategy = gameStrategy;
+    }
 
     private String pinFall;
     private int points;
-
 
     @Override
     public int getPoints() {
@@ -30,26 +36,6 @@ public class BowlingRoll implements Roll {
 
     @Override
     public void setPinFall(String pinFall) {
-        switch (pinFall.toUpperCase()) {
-            case "F":
-            case "-":
-                setPoints(0);
-                this.pinFall = pinFall;
-                break;
-            case "10":
-                setPoints(10);
-                this.pinFall = "X";
-                break;
-            case "/":
-                this.pinFall = pinFall;
-                break;
-            case "X":
-                this.setPoints(BowlingEnum.MAX_PINS.toInt());
-                this.pinFall = pinFall;
-                break;
-            default:
-                this.setPoints(Integer.parseInt(pinFall));
-                this.pinFall = pinFall;
-        }
+        this.pinFall = this.gameStrategy.getCustomPinFall(this, pinFall);
     }
 }

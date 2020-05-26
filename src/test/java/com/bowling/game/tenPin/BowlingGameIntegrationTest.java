@@ -1,5 +1,6 @@
-package com.bowling.game;
+package com.bowling.game.tenPin;
 
+import com.bowling.game.Game;
 import com.bowling.game.exception.BowlingException;
 import com.bowling.game.services.BowlingService;
 import com.bowling.game.services.GameService;
@@ -7,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * Integration test to test all examples informed on the PDF
@@ -17,7 +19,7 @@ public class BowlingGameIntegrationTest extends AbstractUtilTest {
     /**
      * Used to process file into a Game
      */
-    private final GameService bowlingService = new BowlingService();
+    private final GameService bowlingService = new BowlingService(gameStrategy);
 
     /**
      * Load the file perfect-score.txt from the resource path, convert it into a Game, and verify the results.
@@ -82,7 +84,11 @@ public class BowlingGameIntegrationTest extends AbstractUtilTest {
      */
     private Game getGameFromInputWithScoreCalculated(String nameOfTestFile) throws BowlingException, IOException {
         ClassLoader classLoader = getClass().getClassLoader();
-        Game game = bowlingService.processFileIntoGame(classLoader.getResource(nameOfTestFile).getPath());
+        URL url = classLoader.getResource(nameOfTestFile);
+        if(url == null){
+            throw new IOException();
+        }
+        Game game = bowlingService.processFileIntoGame(url.getPath());
 
         game.calculateScore();
         return game;

@@ -3,6 +3,7 @@ package com.bowling.file;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -24,7 +25,11 @@ public class TextFileManagerTest {
     @Test()
     public void whenLoadAFileTest_thenCheckSize() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
-        List<String> content = file.loadFileContent(classLoader.getResource("perfect-score.txt").getPath());
+        URL url = classLoader.getResource("perfect-score.txt");
+        if(url == null){
+            throw new IOException();
+        }
+        List<String> content = file.loadFileContent(url.getPath());
 
         assertEquals(12, content.size());
     }

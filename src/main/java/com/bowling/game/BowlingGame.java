@@ -1,6 +1,7 @@
 package com.bowling.game;
 
 import com.bowling.game.exception.BowlingException;
+import com.bowling.game.strategy.GameStrategy;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +11,13 @@ import java.util.List;
  *
  * @author Pedro Ferri
  */
-public class BowlingGame implements Game {
+public final class BowlingGame implements Game {
+    private final GameStrategy gameStrategy;
+
+    public BowlingGame (GameStrategy gameStrategy){
+        this.gameStrategy = gameStrategy;
+    }
+
     /**
      * All players of this Game
      */
@@ -28,21 +35,15 @@ public class BowlingGame implements Game {
                 .findAny()
                 .orElse(null);
         if (player == null) {
-            player = BowlingPlayer.create(playerName);
+            player = new BowlingPlayer(this.gameStrategy);
+            player.setName(playerName);
             players.add(player);
         }
         return player;
     }
 
-    /**
-     * Call the calculateScore from the all players
-     *
-     * @throws BowlingException if any data does not comply with the system standards.
-     */
     @Override
     public void calculateScore() throws BowlingException {
-        for (Player player : players) {
-            player.calculateScore();
-        }
+        this.gameStrategy.calculateScore(this);
     }
 }

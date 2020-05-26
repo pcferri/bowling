@@ -7,12 +7,12 @@ import com.bowling.game.services.BowlingReportingTextService;
 import com.bowling.game.services.BowlingService;
 import com.bowling.game.services.GameReportingService;
 import com.bowling.game.services.GameService;
+import com.bowling.game.strategy.GameStrategy;
+import com.bowling.game.strategy.tenPin.TenPinGameStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * Bowling main class to start the application
@@ -27,27 +27,21 @@ class BowlingApp {
     private static final Logger logger = LogManager.getLogger();
 
     /**
-     * Bowling Service to process the game
-     */
-    private static final GameService bowlingService = new BowlingService();
-
-    /**
-     * Game Reporting Service to print the results
-     */
-    private static final GameReportingService bowlingReportingTextService = new BowlingReportingTextService();
-
-    /**
      * Main class to start the example of Bowling
      *
      * @param args Not necessary to this example
      */
     public static void main(String[] args) {
         try {
-            logger.info(BowlingEnum.PLEASE_TYPE_THE_PATH_OF_THE_TXT_FILE);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            String filePath = reader.readLine();
+            if(args.length == 0){
+                throw new IOException();
+            }
 
-            Game game = bowlingService.processFileIntoGame(filePath);
+            GameStrategy tenPinStrategy = new TenPinGameStrategy();
+            GameService bowlingService = new BowlingService(tenPinStrategy);
+            GameReportingService bowlingReportingTextService = new BowlingReportingTextService(tenPinStrategy);
+
+            Game game = bowlingService.processFileIntoGame(args[0]);
             game.calculateScore();
             logger.info(bowlingReportingTextService.generateReport(game));
         } catch (BowlingException e) {

@@ -34,13 +34,6 @@ public interface Frame extends Score, ProcessScore {
     int getCurrentFrame();
 
     /**
-     * Get Player owner of this Frame
-     *
-     * @return Player
-     */
-    Player getPlayer();
-
-    /**
      * Set a new Player
      *
      * @param player player object

@@ -28,9 +28,6 @@ public class BowlingFrame implements Frame {
      */
     private final List<Roll> rolls = new LinkedList<>();
 
-    /**
-     * Score of this frame
-     */
     private int score = 0;
 
     /**
@@ -40,13 +37,13 @@ public class BowlingFrame implements Frame {
 
     @Override
     public Frame getPreviousFrame() {
-        return getPlayer().getFrames().get(this.currentFrame - 2);
+        return this.player.getFrames().get(this.currentFrame - 2);
     }
 
     @Override
     public Frame getNextFrame() throws BowlingException {
-        if (getPlayer().getFrames().size() > this.currentFrame) {
-            return getPlayer().getFrames().get(this.currentFrame);
+        if (this.player.getFrames().size() > this.currentFrame) {
+            return this.player.getFrames().get(this.currentFrame);
         } else {
             throw new BowlingException(BowlingEnum.INVALID_NUMBERS_OF_FRAMES_FOUND.toString());
         }
@@ -82,57 +79,26 @@ public class BowlingFrame implements Frame {
         return rolls.size();
     }
 
+    /**
+     * Score of this frame
+     */
     @Override
     public int getScore() {
         return score;
     }
 
-    /**
-     * Calculate the score from this frame respecting the rules of spare Bowling score.
-     *
-     * @throws BowlingException if any data does not comply with the system standards.
-     */
     @Override
     public void calculateScore() throws BowlingException {
-        int scoreRoll = rolls.stream().mapToInt(Roll::getPoints).sum();
-
-        //if the frame spare and has only 1 roll get next 2 rolls
-        if (isSpare() && rolls.size() == 1) {
-            Frame nextFrame = getNextFrame();
-
-            //Get ony 2 rolls in the next frame
-            if (nextFrame.getCurrentFrame() == BowlingEnum.LIMIT_FRAMES.toInt()) {
-                scoreRoll += nextFrame.getRolls().stream().limit(2).mapToInt(Roll::getPoints).sum();
-            } else {
-                scoreRoll += nextFrame.getRolls().stream().mapToInt(Roll::getPoints).sum();
-            }
-
-            //If the next has only 1 roll, get in the next frame
-            if (nextFrame.getRolls().size() == 1) {
-                scoreRoll += nextFrame.getNextFrame().getRolls().stream().findFirst().get().getPoints();
-            }
-        } else {
-            //if the frame spare and has 2 rolls get next 1 roll only
-            if (isSpare() && rolls.size() == 2) {
-                scoreRoll += getNextFrame().getRolls().stream().findFirst().get().getPoints();
-            }
-        }
-
-        //sum the score with previous score frame
-        if (currentFrame > 1) {
-            scoreRoll += getPreviousFrame().getScore();
-        }
-
-        this.score = scoreRoll;
-    }
-
-    @Override
-    public Player getPlayer() {
-        return player;
+        player.getGameStrategy().calculateScore(this);
     }
 
     @Override
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    @Override
+    public void setScore(int score) {
+        this.score = score;
     }
 }

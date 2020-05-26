@@ -3,6 +3,7 @@ package com.bowling.game.parser;
 
 import com.bowling.game.Game;
 import com.bowling.game.exception.BowlingException;
+import com.bowling.game.strategy.tenPin.TenPinGameStrategy;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public class BowlingGameTextParserTest {
 
-    private final GameParser gameParser = new BowlingGameTextParser();
+    private final GameParser gameParser = new BowlingGameTextParser(new TenPinGameStrategy());
 
     private List<String> generateInputText(String prefixNamePlayer, int players, int rolls, String pinFalls){
         List<String> fileContent = new ArrayList<>();

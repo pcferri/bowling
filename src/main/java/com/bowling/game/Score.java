@@ -13,4 +13,6 @@ public interface Score {
      * @return total of score of the object
      */
     int getScore();
+
+    void setScore(int score);
 }

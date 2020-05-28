@@ -44,36 +44,12 @@ public class TenPinGameRollManagement implements RollManagement {
             lastFrame.setCurrentFrame(nextFrameNumber);
             lastFrame.setPlayer(player);
             player.getFrames().add(lastFrame);
-
-            if(player.getFrames().size() > 1) {
-                checkIfPreviousFrameHasSpare(lastFrame);
-            }
         }
 
         gameValidation.existsMoreRollsThanAllowed(player.getFrames(), lastFrame);
 
         lastFrame.setPlayer(player);
         lastFrame.getRolls().add(roll);
-    }
-
-    /**
-     * Check if the previous frame has a spare
-     *
-     * @param frame current frame to validation
-     */
-    private void checkIfPreviousFrameHasSpare(Frame frame) throws BowlingException {
-        Frame lastFrame = frame.getPreviousFrame();
-        int totalPointsLastFrame = lastFrame.getRolls().stream().mapToInt(Roll::getPoints).sum();
-        if (totalPointsLastFrame >= BowlingTenPinEnum.MAX_PINS.toInt()) {
-            lastFrame.setSpare(true);
-            if (lastFrame.getRollSize() > 1) {
-                Roll lastRoll = lastFrame.getRolls()
-                        .stream()
-                        .reduce((a, b) -> b)
-                        .orElseThrow(() -> new BowlingException(BowlingEnum.INVALID_NUMBERS_OF_FRAMES_FOUND.toString()));
-                lastRoll.setPinFall("/");
-            }
-        }
     }
 
     @Override

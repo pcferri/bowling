@@ -20,7 +20,7 @@ public class BowlingPlayerTest extends AbstractUtilTest {
     public void whenAddTooMuchRollsIntoFrames_thenExceptThrow() throws BowlingException {
         Player player = new BowlingPlayer(gameStrategy);
 
-        for (int i = 1; i <= getLimitRolls(); i++) {
+        for (int i = 1; i <= POSSIBLE_ROLLS_TEN_BOWLING; i++) {
             Roll roll = new BowlingRoll(gameStrategy);
             roll.setPinFall("10");
             player.addRollIntoFrames(roll);
@@ -31,7 +31,7 @@ public class BowlingPlayerTest extends AbstractUtilTest {
     public void whenAddLessRollsIntoFrames_thenExceptThrow() throws BowlingException {
         Player player = new BowlingPlayer(gameStrategy);
 
-        for (int i = 1; i <= getLimitRolls() / 2; i++) {
+        for (int i = 1; i <= POSSIBLE_ROLLS_TEN_BOWLING / 2; i++) {
             Roll roll = new BowlingRoll(gameStrategy);
             roll.setPinFall("10");
             player.addRollIntoFrames(roll);
@@ -42,35 +42,38 @@ public class BowlingPlayerTest extends AbstractUtilTest {
     @Test()
     public void whenCalculateScoreWithNoSpare_thenExcept120Score() throws BowlingException {
         Player player = new BowlingPlayer(gameStrategy);
-        for (int i = 1; i <= (BowlingTenPinEnum.LIMIT_FRAMES.toInt() - 1); i++) {
-            player.getFrames().add(getFrameWithCustomPinFall(i, 1, player, "4"));
-        }
-        player.getFrames().add(getFrameWithCustomPinFall(BowlingTenPinEnum.LIMIT_FRAMES.toInt(), 3, player, "4"));
 
+        for (int i = 1; i <= POSSIBLE_ROLLS_TEN_BOWLING; i++) {
+            Roll roll = new BowlingRoll(gameStrategy);
+            roll.setPinFall("4");
+            player.addRollIntoFrames(roll);
+        }
         player.calculateScore();
-        Assert.assertEquals(120, getScoreLastFrame(player.getFrames()));
+        Assert.assertEquals(84, getScoreLastFrame(player.getFrames()));
     }
 
 
     @Test()
-    public void whenCalculateScoreWitSpare_thenExcept150Score() throws BowlingException {
+    public void whenCalculateScoreWithSpare_thenExcept150Score() throws BowlingException {
         Player player = new BowlingPlayer(gameStrategy);
-        for (int i = 1; i <= (BowlingTenPinEnum.LIMIT_FRAMES.toInt() - 1); i++) {
-            player.getFrames().add(getFrameWithCustomPinFall(i, 1, player, "5"));
+        for (int i = 1; i <= POSSIBLE_ROLLS_TEN_BOWLING; i++) {
+            Roll roll = new BowlingRoll(gameStrategy);
+            roll.setPinFall("5");
+            player.addRollIntoFrames(roll);
         }
-        player.getFrames().add(getFrameWithCustomPinFall(BowlingTenPinEnum.LIMIT_FRAMES.toInt(), 3, player, "5"));
 
         player.calculateScore();
         Assert.assertEquals(150, getScoreLastFrame(player.getFrames()));
     }
 
     @Test()
-    public void whenCalculateScoreUsingLimitFramesWithStrikeRolls_thenExceptThrow() throws BowlingException {
+    public void whenCalculateScoreUsingLimitFramesWithStrikeRolls_thenExcept300Score() throws BowlingException {
         Player player = new BowlingPlayer(gameStrategy);
-        for (int i = 1; i <= (BowlingTenPinEnum.LIMIT_FRAMES.toInt() - 1); i++) {
-            player.getFrames().add(getFrameWithStrike(i, 1, player));
+        for (int i = 1; i <= POSSIBLE_ROLLS_STRIKE_TEN_BOWLING; i++) {
+            Roll roll = new BowlingRoll(gameStrategy);
+            roll.setPinFall(BowlingTenPinEnum.MAX_PINS.toString());
+            player.addRollIntoFrames(roll);
         }
-        player.getFrames().add(getFrameWithStrike(BowlingTenPinEnum.LIMIT_FRAMES.toInt(), 3, player));
 
         player.calculateScore();
         Assert.assertEquals(300, getScoreLastFrame(player.getFrames()));
@@ -79,10 +82,11 @@ public class BowlingPlayerTest extends AbstractUtilTest {
     @Test(expected = BowlingException.class)
     public void whenCalculateScoreWithTooMuchFrames_thenExceptThrow() throws BowlingException {
         Player player = new BowlingPlayer(gameStrategy);
-        for (int i = 1; i <= BowlingTenPinEnum.LIMIT_FRAMES.toInt(); i++) {
-            player.getFrames().add(getFrameWithStrike(i, 1, player));
+        for (int i = 1; i <= (POSSIBLE_ROLLS_TEN_BOWLING + 1); i++) {
+            Roll roll = new BowlingRoll(gameStrategy);
+            roll.setPinFall(BowlingTenPinEnum.MAX_PINS.toString());
+            player.addRollIntoFrames(roll);
         }
-        player.getFrames().add(getFrameWithStrike(BowlingTenPinEnum.LIMIT_FRAMES.toInt() + 1, 3, player));
 
         player.calculateScore();
     }

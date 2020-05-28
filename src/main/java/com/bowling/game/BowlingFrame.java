@@ -14,11 +14,6 @@ import java.util.List;
 public class BowlingFrame implements Frame {
 
     /**
-     * Check if this frame has a spare point
-     */
-    private boolean spare = false;
-
-    /**
      * Unique number to this current frame
      */
     private int currentFrame = 0;
@@ -62,16 +57,6 @@ public class BowlingFrame implements Frame {
     @Override
     public List<Roll> getRolls() {
         return rolls;
-    }
-
-    @Override
-    public boolean isSpare() {
-        return this.spare;
-    }
-
-    @Override
-    public void setSpare(boolean spare) {
-        this.spare = spare;
     }
 
     @Override

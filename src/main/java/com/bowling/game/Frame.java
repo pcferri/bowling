@@ -55,20 +55,6 @@ public interface Frame extends Score, ProcessScore {
     List<Roll> getRolls();
 
     /**
-     * Check if this frame has a spare point
-     *
-     * @return true if this frame has a spare point
-     */
-    boolean isSpare();
-
-    /**
-     * Set if this frame has a spare
-     *
-     * @param spare new spare status
-     */
-    void setSpare(boolean spare);
-
-    /**
      * Get the site of the Roll
      *
      * @return size of the Roll list

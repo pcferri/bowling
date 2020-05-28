@@ -38,7 +38,7 @@ public class TenPinGameScoreCalculation implements ScoreCalculation {
         int scoreRoll = frame.getRolls().stream().mapToInt(Roll::getPoints).sum();
 
         //if the frame spare and has only 1 roll get next 2 rolls
-        if (frame.isSpare() && frame.getRolls().size() == 1) {
+        if (isFrameHasSpare(frame) && frame.getRolls().size() == 1) {
             Frame nextFrame = frame.getNextFrame();
 
             //Get ony 2 rolls in the next frame
@@ -65,7 +65,7 @@ public class TenPinGameScoreCalculation implements ScoreCalculation {
             }
         } else {
             //if the frame spare and has 2 rolls get next 1 roll only
-            if (frame.isSpare() && frame.getRolls().size() == 2) {
+            if (isFrameHasSpare(frame) && frame.getRolls().size() == 2) {
                 scoreRoll += frame.getNextFrame().getRolls()
                         .stream()
                         .findFirst()
@@ -80,5 +80,49 @@ public class TenPinGameScoreCalculation implements ScoreCalculation {
         }
 
         frame.setScore(scoreRoll);
+    }
+
+    /**
+     * Check if the frame has a spare
+     *
+     * @param frame current frame to validation
+     * @return True if the frame has a spare
+     * @throws BowlingException if any data does not comply with the system standards.
+     */
+    private boolean isFrameHasSpare(Frame frame) throws BowlingException {
+        int totalPointsLastFrame = frame.getRolls().stream().mapToInt(Roll::getPoints).sum();
+        if (totalPointsLastFrame >= BowlingTenPinEnum.MAX_PINS.toInt()) {
+            updatePinFall(frame);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Update the PinFall with the value to print to the user
+     *
+     * @param frame current frame to validation
+     * @throws BowlingException if any data does not comply with the system standards.
+     */
+    private void updatePinFall(Frame frame) throws BowlingException {
+        Roll lastRoll = frame.getRolls()
+                .stream()
+                .reduce((a, b) -> b)
+                .orElseThrow(() -> new BowlingException(BowlingEnum.INVALID_NUMBERS_OF_FRAMES_FOUND.toString()));
+        if (frame.getRollSize() == 2) {
+                lastRoll.setPinFall("/");
+        } else if (frame.getRollSize() == 3) {
+            int totalFirstTwoRolls = frame.getRolls().subList(0, 2)
+                    .stream()
+                    .mapToInt(Roll::getPoints)
+                    .sum();
+            Roll secondRoll = frame.getRolls().get(1);
+
+            if(totalFirstTwoRolls == BowlingTenPinEnum.MAX_PINS.toInt()){
+                secondRoll.setPinFall("/");
+            }else if(lastRoll.getPoints() + secondRoll.getPoints() == BowlingTenPinEnum.MAX_PINS.toInt()){
+                lastRoll.setPinFall("/");
+            }
+        }
     }
 }

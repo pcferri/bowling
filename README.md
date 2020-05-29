@@ -22,7 +22,7 @@ To execute the application, use this command to execute the jar, you must need t
 
 ### Unit tests
 
-Was created 33 unit tests, 4 tests cases for integration tests using real examples.
+Was created 38 unit tests, 4 tests cases for integration tests using real examples.
    
    
 ### Sample

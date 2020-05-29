@@ -78,7 +78,7 @@ public class BowlingFrameTest extends AbstractUtilTest {
     }
 
     @Test
-    public void whenCalculateScoreWithPerfectScore_thenExceptSlashSecondRollEachFrame() throws BowlingException {
+    public void whenCalculateScorePinFallAllSecondRoll_thenExceptSlashSecondRollEachFrame() throws BowlingException {
         Player player = new BowlingPlayer(gameStrategy);
         for (int i = 1; i <= (POSSIBLE_ROLLS_TEN_BOWLING / 2 -1); i++) {
             Roll roll = new BowlingRoll(gameStrategy);
@@ -113,7 +113,7 @@ public class BowlingFrameTest extends AbstractUtilTest {
 
 
     @Test
-    public void whenCalculateScoreWithPerfectScore_thenExceptSlashSecondRollEachFrameXXXXXXXXXXXXXXXXX() throws BowlingException {
+    public void whenCalculateScoreWithNoSpareLastRoll_thenExceptOneRollLastFrame() throws BowlingException {
         Player player = new BowlingPlayer(gameStrategy);
         for (int i = 1; i <= (POSSIBLE_ROLLS_TEN_BOWLING / 2 -1); i++) {
             Roll roll = new BowlingRoll(gameStrategy);
@@ -142,5 +142,38 @@ public class BowlingFrameTest extends AbstractUtilTest {
         }
 
         Assert.assertEquals("1", getPinFallLastFrame(player.getFrames()));
+    }
+
+
+    @Test
+    public void whenCalculateScoreWithSpareLastRoll_thenExceptSlashRollLastFrame() throws BowlingException {
+        Player player = new BowlingPlayer(gameStrategy);
+        for (int i = 1; i <= (POSSIBLE_ROLLS_TEN_BOWLING / 2 -1); i++) {
+            Roll roll = new BowlingRoll(gameStrategy);
+            roll.setPinFall("3");
+            player.addRollIntoFrames(roll);
+
+            Roll roll2 = new BowlingRoll(gameStrategy);
+            roll2.setPinFall("3");
+            player.addRollIntoFrames(roll2);
+        }
+
+        Roll roll = new BowlingRoll(gameStrategy);
+        roll.setPinFall("X");
+        player.addRollIntoFrames(roll);
+
+        Roll roll2 = new BowlingRoll(gameStrategy);
+        roll2.setPinFall("8");
+        player.addRollIntoFrames(roll2);
+
+        Roll roll3 = new BowlingRoll(gameStrategy);
+        roll3.setPinFall("2");
+        player.addRollIntoFrames(roll3);
+
+        for (Frame frame : player.getFrames()) {
+            frame.calculateScore();
+        }
+
+        Assert.assertEquals("/", getPinFallLastFrame(player.getFrames()));
     }
 }

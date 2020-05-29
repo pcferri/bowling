@@ -1,9 +1,6 @@
 package com.bowling.game.tenPin;
 
-import com.bowling.game.BowlingPlayer;
-import com.bowling.game.BowlingRoll;
-import com.bowling.game.Player;
-import com.bowling.game.Roll;
+import com.bowling.game.*;
 import com.bowling.game.exception.BowlingException;
 import com.bowling.game.strategy.tenPin.enuns.BowlingTenPinEnum;
 import org.junit.Assert;
@@ -89,5 +86,16 @@ public class BowlingPlayerTest extends AbstractUtilTest {
         }
 
         player.calculateScore();
+    }
+
+    @Test(expected = BowlingException.class)
+    public void whenCalculateScoreMoreFramesThanLimit_thenExceptThrowException() throws BowlingException {
+        Player player = new BowlingPlayer(gameStrategy);
+        for (int i = 1; i < POSSIBLE_ROLLS_TEN_BOWLING + 1; i++) {
+            player.getFrames().add(new BowlingFrame());
+        }
+        player.calculateScore();
+
+        Assert.assertEquals("/", getPinFallLastFrame(player.getFrames()));
     }
 }

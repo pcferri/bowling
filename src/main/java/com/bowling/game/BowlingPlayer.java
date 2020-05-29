@@ -67,9 +67,4 @@ public class BowlingPlayer implements Player {
         BowlingPlayer that = (BowlingPlayer) o;
         return Objects.equals(name, that.name);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
 }
